@@ -140,15 +140,9 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
 
     @Override
     public boolean onQueryTextChange(String queryText){
+
         if (TextUtils.isEmpty(queryText)) {
-            // Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
-            RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAllSorted("date", Sort.DESCENDING);
-            // 上記の結果を、TaskList としてセットする
-            mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
-            // TaskのListView用のアダプタに渡す
-            mListView.setAdapter(mTaskAdapter);
-            // 表示を更新するために、アダプターにデータが変更されたことを知らせる
-            mTaskAdapter.notifyDataSetChanged();
+            reloadListView();
         } else {
             // Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
             RealmResults<Task> taskRealmResults = mRealm.where(Task.class).equalTo("category", queryText.toString()).findAllSorted("date", Sort.DESCENDING);
@@ -159,6 +153,8 @@ public class MainActivity extends AppCompatActivity  implements SearchView.OnQue
             // 表示を更新するために、アダプターにデータが変更されたことを知らせる
             mTaskAdapter.notifyDataSetChanged();
         }
+
+
         return true;
     }
 
